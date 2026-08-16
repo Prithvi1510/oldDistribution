@@ -1,0 +1,1 @@
+{"version":3,"file":"Keycloak.clientRepresentation.js","sourceRoot":"","sources":["../../types/Keycloak.clientRepresentation.ts"],"names":[],"mappings":"","sourcesContent":["export interface KeycloakClientRepresentation {\n  id: string;\n  clientId: string;\n  name?: string;\n}\n\n"]}

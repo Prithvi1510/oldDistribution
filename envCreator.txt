@@ -1,0 +1,14 @@
+VITE_OIDC_ISSUER_URI=http://localhost:8080/realms/FleetPro
+VITE_OIDC_CLIENT_ID=ScadaClient
+VITE_ADMIN_USERNAME=admin
+VITE_ADMIN_API_URL=http://localhost:3000
+VITE_DATA_BACKEND_API_URL=http://127.0.0.1:8000
+VITE_OIDC_USE_MOCK=false
+
+KEYCLOAK_BASE_URL=http://localhost:8080
+REALM=FleetPro
+CLIENT_ID=my-service-account
+CLIENT_SECRET=D0l0GOrylxFzwerSgPA2X4VZ8swtnOWX
+PORT=3000
+WEBAPP_BASE_URL=http://localhost:5713
+CLIENT_NAME=ScadaClient
