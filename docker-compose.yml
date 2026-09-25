@@ -63,6 +63,25 @@ services:
       - "8812:8812"
       - "9009:9009"
 
+  # one-shot: waits for QuestDB, creates tables, then exits
+  fleetpro-questdb-init:
+    image: postgres:18
+    container_name: fleetpro-questdb-init
+    restart: "no"
+    depends_on:
+      - fleetpro-questdb
+    environment:
+      PGHOST: fleetpro-questdb
+      PGPORT: 8812
+      PGUSER: admin
+      PGPASSWORD: quest
+      PGDATABASE: qdb
+    volumes:
+      - ./questdb/init.sql:/init.sql:ro
+    command: >
+      sh -c "until psql -c 'SELECT 1' >/dev/null 2>&1; do echo 'waiting for questdb...'; sleep 2; done &&
+             psql -v ON_ERROR_STOP=1 -f /init.sql && echo 'questdb init done'"
+
   adminapi:
     image: node:20
     container_name: fleetpro-adminapi
@@ -72,19 +91,6 @@ services:
       - ./Adminapi/dist:/app
       - ./Adminapi/.env:/app/.env
     command: sh -c "npm install && node server.js"
-    depends_on:
-      - fleetpro-keycloak
-      - fleetpro-postgres
-    # no ports exposed — nginx proxies internally
-
-  simulator-api:
-    image: python:3.11
-    container_name: fleetpro-simulator
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./Simulator:/app
-    command: sh -c "pip install --no-cache-dir -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
     depends_on:
       - fleetpro-keycloak
       - fleetpro-postgres
@@ -101,7 +107,6 @@ services:
       - "5173:80"
     depends_on:
       - adminapi
-      - simulator-api
 
 volumes:
   fleetpro_pgdata:
