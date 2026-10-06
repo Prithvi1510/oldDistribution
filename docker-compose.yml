@@ -48,39 +48,39 @@ services:
     ports:
       - "5433:5432"
 
-  fleetpro-questdb:
-    image: questdb/questdb:latest
-    container_name: fleetpro-questdb
-    restart: unless-stopped
-    environment:
-      QDB_PG_USER: admin
-      QDB_PG_PASSWORD: quest
-      QDB_INSTANCE_NAME: fleetpro-questdb
-    volumes:
-      - fleetpro_questdb_data:/var/lib/questdb
-    ports:
-      - "9001:9000"
-      - "8812:8812"
-      - "9009:9009"
+  # fleetpro-questdb:
+  #   image: questdb/questdb:latest
+  #   container_name: fleetpro-questdb
+  #   restart: unless-stopped
+  #   environment:
+  #     QDB_PG_USER: admin
+  #     QDB_PG_PASSWORD: quest
+  #     QDB_INSTANCE_NAME: fleetpro-questdb
+  #   volumes:
+  #     - fleetpro_questdb_data:/var/lib/questdb
+  #   ports:
+  #     - "9001:9000"
+  #     - "8812:8812"
+  #     - "9009:9009"
 
-  # one-shot: waits for QuestDB, creates tables, then exits
-  fleetpro-questdb-init:
-    image: postgres:18
-    container_name: fleetpro-questdb-init
-    restart: "no"
-    depends_on:
-      - fleetpro-questdb
-    environment:
-      PGHOST: fleetpro-questdb
-      PGPORT: 8812
-      PGUSER: admin
-      PGPASSWORD: quest
-      PGDATABASE: qdb
-    volumes:
-      - ./questdb/init.sql:/init.sql:ro
-    command: >
-      sh -c "until psql -c 'SELECT 1' >/dev/null 2>&1; do echo 'waiting for questdb...'; sleep 2; done &&
-             psql -v ON_ERROR_STOP=1 -f /init.sql && echo 'questdb init done'"
+  # # one-shot: waits for QuestDB, creates tables, then exits
+  # fleetpro-questdb-init:
+  #   image: postgres:18
+  #   container_name: fleetpro-questdb-init
+  #   restart: "no"
+  #   depends_on:
+  #     - fleetpro-questdb
+  #   environment:
+  #     PGHOST: fleetpro-questdb
+  #     PGPORT: 8812
+  #     PGUSER: admin
+  #     PGPASSWORD: quest
+  #     PGDATABASE: qdb
+  #   volumes:
+  #     - ./questdb/init.sql:/init.sql:ro
+  #   command: >
+  #     sh -c "until psql -c 'SELECT 1' >/dev/null 2>&1; do echo 'waiting for questdb...'; sleep 2; done &&
+  #            psql -v ON_ERROR_STOP=1 -f /init.sql && echo 'questdb init done'"
 
   adminapi:
     image: node:20
@@ -111,4 +111,4 @@ services:
 volumes:
   fleetpro_pgdata:
   fleetpro_senvdb_data:
-  fleetpro_questdb_data:
+  # fleetpro_questdb_data:
